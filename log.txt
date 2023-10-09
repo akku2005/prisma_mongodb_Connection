@@ -1,0 +1,8 @@
+npm init
+npm install express 
+npm install jsonwebtoken (jwt);
+npm install @prisma/client
+npm install dotenv
+npx prisma init
+npm install mongoose
+npm install mongodb
