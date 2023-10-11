@@ -1,0 +1,88 @@
+{
+	"openapi": "3.0.0",
+	"info": {
+		"title": "My API",
+		"version": "1.0.0"
+	},
+	"paths": {
+		"/api/signup": {
+			"post": {
+				"summary": "Sign up a user",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserSignup"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User signed up successfully"
+					},
+					"400": {
+						"description": "Bad request"
+					}
+				}
+			}
+		},
+		"/api/login": {
+			"post": {
+				"summary": "Log in a user",
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/UserLogin"
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "User logged in successfully"
+					},
+					"401": {
+						"description": "Unauthorized"
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"UserSignup": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"phoneNumber": {
+						"type": "string"
+					}
+				}
+			},
+			"UserLogin": {
+				"type": "object",
+				"properties": {
+					"email": {
+						"type": "string"
+					},
+					"password": {
+						"type": "string"
+					},
+					"phoneNumber": {
+						"type": "string"
+					}
+				}
+			}
+		}
+	}
+}

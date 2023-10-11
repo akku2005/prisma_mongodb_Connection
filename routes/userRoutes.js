@@ -1,10 +1,20 @@
-const express = require("express")
-const router  = express.Router();
+const express = require("express");
+const router = express.Router();
 
-const{signup,login,logout} = require("../controllers/userControllers")
+const { signup, login, logout } = require("../controllers/userControllers");
 
-router.route("/signup").post(signup)
-router.route('/login').post(login);
-router.route("/logout").get(logout);
+// Public route for user signup
+router.post("/signup", signup);
 
-module.exports = router
+// Public route for user login
+router.post("/login", login);
+
+// Protected route for user logout (requires authentication)
+router.get("/logout", (req, res, next) => {
+  if (!req.isAuthenticated()) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
+  logout(req, res, next);
+});
+
+module.exports = router;
