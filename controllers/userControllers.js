@@ -12,9 +12,26 @@ exports.signup= async(req,res,next)=>{
         }
         const user = await prisma.user.create({
             data: {
-              name,
-              email,
-              password,
+              firstName: String,
+              middleName: String,
+              lastName: String,
+              referrer: String,
+              kycID: String,
+              falconId: String,
+              phone: String,
+              verifiedEmail: Boolean,
+              verifiedPhone: Boolean,
+              email: String,
+              panDocNo: String,
+              bankId: String,
+              bankAccountNumber: String,
+              bankIFSC: String,
+              productId: String,
+              vpan: String,
+              instrumentId: String,
+              inProfile: Boolean,
+              isMinor: Boolean,
+              parentId: mongoose.Schema.Types.ObjectId,
             },
           });
 
@@ -32,7 +49,7 @@ exports.signup= async(req,res,next)=>{
 exports.login= async(req,res,next)=>{
   try{
     //take info from user
-    const{name,email,password}= req.body;
+    const{email,password}= req.body;
     if( !email || !password){
       throw new Error("please provide email and password");
 
@@ -40,7 +57,8 @@ exports.login= async(req,res,next)=>{
 //find a user based on email
 const user = await prisma.use.findUnique({
   where:{
-    email
+    email,
+    phone
   }
 })
 //whwn there is no user
