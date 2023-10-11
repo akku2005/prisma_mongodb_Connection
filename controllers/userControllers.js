@@ -1,75 +1,85 @@
-const prisma  =  require("../prisma/index");
-const cookieToken = require("../utils/cookieToken")
+const prisma = require("../prisma/index");
+const cookieToken = require("../utils/cookieToken");
+const bcrypt = require("bcrypt");
 
+exports.signup = async (req, res, next) => {
+  try {
+    const { name, email, password, phoneNumber } = req.body;
 
-//user signup
-exports.signup= async(req,res,next)=>{
-    try{
-        const {name,email,password}= req.body
-        //check
-        if(!name || !email || !password){
-            throw new Error ("Please Provide all details");
-        }
-        const user = await prisma.user.create({
-            data: {
-              name,
-              email,
-              password,
-            },
-          });
-
-        //send user token
-        cookieToken(user,res)
+    if (!name || !email || !password || !phoneNumber) {
+      return res.status(400).json({ error: "Please provide all details" });
     }
-    catch (error){
-            throw new Error(error)
-    }
-}
 
+    // Hash the password before storing it
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-//for login user
+    const user = await prisma.user.create({
+      data: {
+        name:name,
+        email:email,
+        password:hashedPassword,
+        phoneNumber:phoneNumber,
+      },
+    });
 
-exports.login= async(req,res,next)=>{
-  try{
-    //take info from user
-    const{name,email,password}= req.body;
-    if( !email || !password){
-      throw new Error("please provide email and password");
-
-    }
-//find a user based on email
-const user = await prisma.use.findUnique({
-  where:{
-    email
+    // Send user token
+    cookieToken(user, res);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-})
-//whwn there is no user
+};
 
-if(!user){
-  throw new Error("user not found");
-}
-//password mismatch
-if(user.password!== password){
-  throw new Error("password is incorrect");
-}
-//user is there and validation
+exports.login = async (req, res, next) => {
+  try {
+    const { email, password, phoneNumber } = req.body;
 
-cookieToken(user,req);
-  }catch(error){
-    throw new Error(err);
+    if (!email || !password) {
+      return res.status(400).json({ error: "Please provide email and password" });
+    }
+
+    // Find a user based on email and phoneNumber
+    const user = await prisma.user.findUnique({
+      where: {
+        OR: [
+          {
+            email,
+          },
+          {
+            phoneNumber, // Include phoneNumber in the search
+          },
+        ],
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Compare the hashed password using bcrypt
+    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Incorrect password" });
+    }
+
+    // User is authenticated, send token
+    cookieToken(user, res);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-}
+};
 
-//logiut user
-
-exports.logout = async (req,res,next)=>{
-  try{
+// Logout user
+exports.logout = async (req, res, next) => {
+  try {
     res.clearCookie("token");
     res.json({
-      success :true
-    })
-
-  }catch(error){
-    throw new Error(error)
+      success: true,
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
-}
+};
