@@ -1,7 +1,6 @@
 {
   "name": "password",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -20,7 +19,9 @@
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.1.0",
     "mongoose": "^7.6.0",
+    "password-hash": "^1.2.2",
     "prisma": "^5.4.1",
     "swagger-ui-express": "^5.0.0"
-  }
+  },
+  "description": ""
 }

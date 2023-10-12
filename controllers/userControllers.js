@@ -4,7 +4,8 @@ const bcrypt = require("bcrypt");
 
 exports.signup = async (req, res, next) => {
   try {
-    const { name, email, password, phoneNumber } = req.body;
+    const { name, email, password, phoneNumber,middleName,firstName,lastName,referrer,falconId,kycID,verifiedEmail,verifiedPhone,panDocNo,bankId,bankAccountNumber,bankIFSC,productId,vpan,instrumentId,inProfile,isMinor,parentId,
+  } = req.body;
 
     if (!name || !email || !password || !phoneNumber) {
       return res.status(400).json({ error: "Please provide all details" });
@@ -16,9 +17,27 @@ exports.signup = async (req, res, next) => {
     const user = await prisma.user.create({
       data: {
         name:name,
+        middleName:middleName,
         email:email,
         password:hashedPassword,
         phoneNumber:phoneNumber,
+        firstName  :firstName,      
+        lastName   :   lastName,   
+        referrer    :referrer,     
+        kycID       :kycID,     
+        falconId   :falconId,          
+        verifiedEmail:verifiedEmail,    
+        verifiedPhone:verifiedPhone,    
+        panDocNo:panDocNo,         
+        bankId:bankId,           
+        bankAccountNumber :bankAccountNumber,
+        bankIFSC:bankIFSC,         
+        productId:productId,        
+        vpan:vpan,             
+        instrumentId  :instrumentId,   
+        inProfile:inProfile,        
+        isMinor:isMinor,          
+        parentId:parentId,                
       },
     });
 
