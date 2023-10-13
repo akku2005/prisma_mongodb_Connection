@@ -10,41 +10,37 @@ generator client {
 }
 
 model User {
-  id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
-  email      String   @unique
-  password   String
-  phoneNumber String 
-  firstName        String
-  middleName       String?
-  lastName         String?
-  referrer         String?
-  kycID            String?
-  falconId         String?
-  verifiedPhone    Boolean?
-  panDocNo         String?
-  bankId           String?
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  email             String   @unique
+  phoneNumber       String   @unique
+  firstName         String
+  password          String
+  middleName        String?
+  lastName          String?
+  photo             String?
+  referrer          String?
+  kycID             String?
+  falconId          String?
+  verifiedPhone     String? //type should be string
+  verifiedEmail     String? //string
+  panDocNo          String?
+  bankId            String?
   bankAccountNumber String?
-  bankIFSC         String?
-  productId        String?
-  vpan             String?
-  instrumentId     String?
-  inProfile        Boolean?
-  isMinor          Boolean?
-  parentId         Int
-  role       Role?
-  posts      Post[]
+  bankIFSC          String?
+  productId         String?
+  vpan              String?
+  inProfile         String?
+  instrumentId      String?
+  isMinor           String?   
+  parentId          String?  @db.ObjectId
+  parent            User?    @relation("ParentChild", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  children          User[]   @relation("ParentChild")
+  segment           Segment?
+  joinedAt          DateTime @default(now())
+  updatedAt         DateTime @default(now())
 }
 
-model Post {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  slug      String
-  title     String
-  author    User      @relation(fields: [authorId], references: [id])
-  authorId  String   @db.ObjectId
-}
-
-enum Role {
-  USER
-  ADMIN
+enum Segment {
+  MINOR
+  MAJOR
 }
